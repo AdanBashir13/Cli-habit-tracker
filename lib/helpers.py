@@ -53,12 +53,14 @@ def list_habits():
 def create_habit():
     name = input("Enter the habit name: ")
     frequency = input("Enter the frequency: ")
-    user_id = input("Enter the user id: ")
-    try:
-        habit = Habit.create(name, frequency, user_id)
-        print(f'Success: {habit}')
-    except Exception as exc:
-        print("Error creating habit: ", exc)
+    user_id = int(input("Enter the user id: "))
+
+    if User.find_by_id(user_id) is None:
+        print("Error creating habit: user_id must reference a user in the database")
+        return
+
+    habit = Habit.create(name, frequency, user_id)
+    print(f"Habit created: {habit}")
 
 def update_habit():
     id_ = input("Enter the habit id: ")
@@ -91,13 +93,17 @@ def list_habit_completions():
         print(completion)
 
 def create_habit_completion():
-    habit_id = input("Enter the habit id: ")
+    habit_id = int(input("Enter the habit id: "))
     date = input("Enter the date (YYYY-MM-DD): ")
-    try:
-        completion = HabitCompletion.create(habit_id, date)
-        print(f'Success: {completion}')
-    except Exception as exc:
-        print("Error creating habit completion: ", exc)
+    user_id = int(input("Enter the user id: "))
+    if Habit.find_by_id(habit_id) is None:
+        print("Error creating habit completion: habit_id must reference a habit in the database")
+        return
+    if User.find_by_id(user_id) is None:
+        print("Error creating habit completion: user_id must reference a user in the database")
+        return
+    habit_completion = HabitCompletion.create(date, habit_id, user_id)
+    print(f"Habit completion created: {habit_completion}")
 
 def update_habit_completion():
     id_ = input("Enter the habit completion id: ")
