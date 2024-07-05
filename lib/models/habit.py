@@ -1,6 +1,7 @@
 from models.__init__ import CURSOR, CONN
 from models.user import User
 
+
 class Habit:
     all = {}
 
